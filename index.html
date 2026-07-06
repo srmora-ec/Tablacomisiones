@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja de Comisiones - Panel de Arte</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400..700&display=swap');
+
+        :root {
+            --celeste-fondo: #eef9ff;
+            --celeste-rombo: #d4f0ff;
+            --celeste-pastel: #bae6fd;
+            --celeste-oscuro: #0284c7;
+            --celeste-acento: #38bdf8;
+            --blanco-translucido: rgba(255, 255, 255, 0.65);
+            --blanco-card: rgba(255, 255, 255, 0.85);
+            --gris-texto: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            color: var(--gris-texto);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            min-height: 100vh;
+            padding: 30px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Fondo de rombos pastel */
+            background-color: var(--celeste-fondo);
+            background-image: 
+                linear-gradient(135deg, var(--celeste-rombo) 25%, transparent 25%), 
+                linear-gradient(225deg, var(--celeste-rombo) 25%, transparent 25%), 
+                linear-gradient(45deg, var(--celeste-rombo) 25%, transparent 25%), 
+                linear-gradient(315deg, var(--celeste-rombo) 25%, var(--celeste-fondo) 25%);
+            background-position: 40px 0, 40px 0, 0 0, 0 0;
+            background-size: 80px 80px;
+            background-repeat: repeat;
+        }
+
+        /* Contenedor Principal Traslúcido */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            max-width: 1200px;
+            width: 100%;
+            background: var(--blanco-translucido);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* PANEL DE INFORMACIÓN (Derecha en PC) */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .brand {
+            text-align: center;
+            background: rgba(186, 230, 253, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 25px 20px;
+            border-radius: 20px;
+            border: 2px solid var(--celeste-pastel);
+        }
+
+        .logo-container {
+            margin-bottom: 12px;
+        }
+
+        .my-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .title-sheet {
+            font-family: 'Fredoka', sans-serif;
+            background: var(--celeste-oscuro);
+            color: white;
+            padding: 12px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+        }
+
+        .section-box {
+            background: var(--blanco-card);
+            border: 2px solid var(--celeste-pastel);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .section-box h3 {
+            font-family: 'Fredoka', sans-serif;
+            text-align: center;
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            color: white;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .puedo h3 { background-color: #38bdf8; }
+        .no-puedo h3 { background-color: #fb7185; }
+        .terminos h3 { background-color: #94a3b8; }
+
+        .section-box ul {
+            list-style: none;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .section-box ul li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 8px;
+        }
+
+        .section-box ul li::before {
+            content: "✦";
+            position: absolute;
+            left: 2px;
+            color: var(--celeste-oscuro);
+            font-size: 0.9rem;
+        }
+
+        /* PANEL DE OPCIONES (Cards con la misma altura) */
+        .options-panel {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--blanco-card);
+            border: 2px solid var(--celeste-pastel);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(2, 132, 199, 0.15);
+            border-color: var(--celeste-acento);
+        }
+
+        .card-header {
+            font-family: 'Fredoka', sans-serif;
+            background: var(--celeste-pastel);
+            text-align: center;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--celeste-oscuro);
+            letter-spacing: 0.5px;
+        }
+
+        .card-preview {
+            height: 420px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid var(--celeste-pastel);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-preview {
+            transform: scale(1.02);
+        }
+
+        .price-table {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1; 
+            justify-content: center;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px dashed rgba(2, 132, 199, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .price-row:last-child {
+            border: none;
+            padding-bottom: 0;
+        }
+
+        .icon-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .custom-icon {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .price-values {
+            text-align: right;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .price-usd {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            color: var(--celeste-oscuro);
+            font-size: 1.15rem;
+        }
+
+        .price-mxn {
+            color: #64748b;
+        }
+
+        /* SISTEMA DE GALERÍA (MODAL) */
+        .gallery-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .gallery-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            border-radius: 24px;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+            border: 2px solid var(--celeste-pastel);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .gallery-modal.active .gallery-content {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2.2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--celeste-oscuro);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .gallery-title {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--celeste-oscuro);
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.6rem;
+        }
+
+        /* Contenedor relativo de imágenes con spinner individual */
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+            cursor: zoom-in;
+        }
+
+        .grid-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .grid-images img.loaded {
+            opacity: 1;
+        }
+
+        .grid-images img:hover {
+            transform: scale(1.05);
+        }
+
+        /* SPINNER DE CARGA */
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--celeste-pastel);
+            border-top: 3px solid var(--celeste-oscuro);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* LIGHTBOX: VER IMAGEN COMPLETA */
+        .lightbox-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-modal.active .lightbox-img {
+            transform: scale(1);
+        }
+
+        /* RESPONSIVO PARA PC */
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row-reverse;
+            }
+
+            .info-panel {
+                flex: 1;
+                position: sticky;
+                top: 30px;
+                height: fit-content;
+            }
+
+            .options-panel {
+                flex: 2.2;
+                grid-template-columns: repeat(3, 1fr);
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <aside class="info-panel">
+            <div class="brand">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Mi Logo" class="my-logo" onerror="this.src='https://via.placeholder.com/150?text=Logo'">
+                </div>
+                <div class="title-sheet">Tabla de Comisiones</div>
+            </div>
+
+            <div class="section-box puedo">
+                <h3>PUEDO HACER</h3>
+                <ul>
+                    <li>Fanarts, Ocs, intentos de portadas</li>
+                    <li>Fondos simples, NSFW u otros </li>
+                </ul>
+            </div>
+
+            <div class="section-box no-puedo">
+                <h3>NO PUEDO HACER</h3>
+                <ul>
+                    <li>Realismo, armaduras full detalladas</li>
+                </ul>
+            </div>
+
+            <div class="section-box terminos">
+                <h3>TÉRMINOS DEL SERVICIO</h3>
+                <ul>
+                    <li>Pago del 50% por adelantado</li>
+                    <li>Pago por paypal</li>
+                    <li>Debe estar atento con las revisiones</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="options-panel">
+            
+            <div class="card" onclick="openGallery('lineart')">
+                <div class="card-header">Lineart</div>
+                <div class="card-preview" style="background-image: url('lineart/lineart1.png'); background-color: #f8fafc;"></div>
+                <div class="price-table">
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="head.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=👤'">
+                            Headshot
+                        </span>
+                        <div class="price-values"><span class="price-usd">$3 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="half.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🧍'">
+                            Half Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$4 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="fbody.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🚶'">
+                            Full Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$6 usd</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" onclick="openGallery('flat')">
+                <div class="card-header">Flat Color</div>
+                <div class="card-preview" style="background-image: url('flat/flat1.png'); background-color: #f8fafc;"></div>
+                <div class="price-table">
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="head.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=👤'">
+                            Headshot
+                        </span>
+                        <div class="price-values"><span class="price-usd">$4 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="half.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🧍'">
+                            Half Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$6 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="fbody.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🚶'">
+                            Full Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$8 usd</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" onclick="openGallery('full')">
+                <div class="card-header">Full Color</div>
+                <div class="card-preview" style="background-image: url('color/color1.png'); background-color: #f8fafc;"></div>
+                <div class="price-table">
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="head.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=👤'">
+                            Headshot
+                        </span>
+                        <div class="price-values"><span class="price-usd">$6 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="half.png"" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🧍'">
+                            Half Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$8 usd</span></div>
+                    </div>
+                    <div class="price-row">
+                        <span class="icon-type">
+                            <img src="fbody.png" alt="Icono" class="custom-icon" onerror="this.src='https://via.placeholder.com/50?text=🚶'">
+                            Full Body
+                        </span>
+                        <div class="price-values"><span class="price-usd">$10 usd</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="gallery-modal" id="galleryModal" onclick="closeGallery(event)">
+        <div class="gallery-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeGallery(null, true)">&times;</button>
+            <h2 class="gallery-title" id="modalTitle">Galería</h2>
+            <div class="grid-images" id="modalGrid"></div>
+        </div>
+    </div>
+
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+        <button class="close-btn" style="color: white; top: 20px; right: 25px;" onclick="closeLightbox()">&times;</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="Vista ampliada">
+    </div>
+
+    <script>
+        const carpetasConfig = {
+            lineart: {
+                titulo: "Mis Trabajos - Lineart",
+                prefijo: "lineart/lineart", 
+                extension: ".png",
+                maxIntentos: 15 
+            },
+            flat: {
+                titulo: "Mis Trabajos - Flat Color",
+                prefijo: "flat/flat", 
+                extension: ".png",
+                maxIntentos: 15
+            },
+            full: {
+                titulo: "Mis Trabajos - Full Color",
+                prefijo: "color/color", 
+                extension: ".png",
+                maxIntentos: 15
+            }
+        };
+
+        function openGallery(tipo) {
+            const modal = document.getElementById('galleryModal');
+            const title = document.getElementById('modalTitle');
+            const grid = document.getElementById('modalGrid');
+            
+            grid.innerHTML = "";
+            const config = carpetasConfig[tipo];
+            title.innerText = config.titulo;
+            
+            for (let i = 1; i <= config.maxIntentos; i++) {
+                const imgSrc = `${config.prefijo}${i}${config.extension}`;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'img-wrapper';
+                
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner';
+                
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = `${config.titulo} - Muestra ${i}`;
+                
+                img.onclick = function() {
+                    openLightbox(this.src);
+                };
+
+                img.onload = function() {
+                    spinner.remove();
+                    img.classList.add('loaded');
+                };
+
+                img.onerror = function() {
+                    wrapper.remove();
+                };
+
+                wrapper.appendChild(spinner);
+                wrapper.appendChild(img);
+                grid.appendChild(wrapper);
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeGallery(event, force = false) {
+            if (force || event.target.id === 'galleryModal') {
+                document.getElementById('galleryModal').classList.remove('active');
+            }
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightboxModal');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
